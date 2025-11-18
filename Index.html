@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+ <html lang="de">
+ <head>
+ <meta charset="UTF-8" />
+ <title>Spiel</title>
+ <style>
+ body {
+ display: flex;
+ flex-flow: row wrap;
+ overflow: hidden;
+ }
+ div {
+ flex: 1;
+ border: 5px solid #000;
+ border-radius: 10px;
+ height: 50px;
+ }
+ canvas {
+ background-color: #222;
+ display: block;
+ margin: 50px auto;
+ border: 2px solid white;
+ width:100%;
+ 
+ }
+ </style>
+ </head>
+ <body>
+ <div>Aktuelle Zeit in Hektoframes: <span id="Z1"></span> HF</div><div>Bestzeit in Hektoframes: <span id="Z2">0</span></div><div>Runde: <span id="Round">1</span></div><div>Geld: <span id="Cash">0</span></div>
+ <canvas id="Canvas" width="600" height="400"></canvas>
+ 
+ <script>
+ const Spielfeld = document.getElementById("Canvas");
+ const ctx = Spielfeld.getContext("2d");
+ let Speicher = {
+ Highscore: 0,
+ cash: 0,
+ }
+ if (localStorage.getItem("Save")) Speicher == JSON.parse(localStorage.getItem("Save"));
+ 
+ document.getElementById("Cash").innerHTML = Speicher.cash;
+ 
+ const player = {
+ x: Spielfeld.width / 2,
+ y: Spielfeld.height / 2,
+ size: 20,
+ speed: 2,
+ dx: 0,
+ dy: 0,
+ Round: 1,
+ time1: 0,
+ time2: 0,
+ time3: 0,
+ 
+ };
+ const coin = {
+ x: Spielfeld.width / 4,
+ y: Spielfeld.height / 4,
+ size: 20,
+ dx: 2,
+ dy: 2,
+ active: 0,
+ value: 1,
+ count: 99,
+ };
+ 
+ const keys = {
+ ArrowUp: false,
+ ArrowDown: false,
+ ArrowLeft: false,
+ ArrowRight: false,
+ w: false,
+ a: false,
+ s: false,
+ d: false,
+ };
+ 
+ 
+ function update() {
+ player.dx = 0;
+ player.dy = 0;
+ 
+ if (keys.w || keys.ArrowUp) player.dy = -player.speed;
+ if (keys.s || keys.ArrowDown) player.dy = player.speed;
+ if (keys.a || keys.ArrowLeft) player.dx = -player.speed;
+ if (keys.d || keys.ArrowRight) player.dx = player.speed;
+ 
+ player.x += player.dx;
+ player.y += player.dy;
+ 
+ 
+ player.x = Math.max(0, Math.min(Spielfeld.width - player.size, player.x));
+ player.y = Math.max(0, Math.min(Spielfeld.height - player.size, player.y));
+ 
+ if (coin.active == 1) {
+ if (coin.x == 0 || coin.x == Spielfeld.width - coin.size) coin.dx = 0 - coin.dx;
+ if (coin.y == 0 || coin.y == Spielfeld.height - coin.size) coin.dy = 0 - coin.dy;
+ 
+ coin.x += (coin.dx);
+ coin.y += (coin.dy);
+ 
+ coin.x = Math.max(0, Math.min(Spielfeld.width - coin.size, coin.x));
+ coin.y = Math.max(0, Math.min(Spielfeld.height - coin.size, coin.y));
+ }
+ }
+ function Collision() {
+ coin.count += 1;
+ if (coin.active == 1) {
+ document.getElementById("Z1").innerHTML = coin.count / 100;
+ if ((((player.x < coin.x)&&(coin.x - player.x < player.size))||((coin.x < player.x)&&(player.x - coin.x < coin.size)))&&(((player.y < coin.y)&&(coin.y - player.y < player.size))||((coin.y < player.y)&&(player.y - coin.y < coin.size)))) {
+ coin.active = 0;
+ if (document.getElementById("Z2").innerHTML == 0 || Speicher.Highscore > coin.count) {document.getElementById("Z2").innerHTML = coin.count / 100; Speicher.Highscore = coin.count;}
+ player.Round += 1;
+ Speicher.cash += coin.value;
+ document.getElementById("Round").innerHTML = player.Round;
+ document.getElementById("Cash").innerHTML = Speicher.cash;
+ coin.count = 0;
+ localStorage.setItem("Save", JSON.stringify(Speicher));
+ }
+ } else { 
+ if (coin.count == 100) {
+ coin.count = 0;
+ coin.active = 1;
+ coin.x = Math.floor(Math.random() * (Spielfeld.width - coin.size));
+ coin.y = Math.floor(Math.random() * (Spielfeld.height - coin.size));
+
+ if (Math.random() < 0.5) coin.dx = 0 - coin.dx;
+ if (Math.random() < 0.5) coin.dy = 0 - coin.dy;
+ if (Math.random() < 0.4) {
+ while (Math.random() < 0.4) {
+	if (Math.random() < 0.5) {
+ player.speed *= (Math.round(Math.random() * 100) / 100);
+ alert("Spezialrunde: playerspeed:" + Math.abs(player.speed / 2));
+ } else {
+ coin.dx *= 1 + Math.round(Math.random() * 100) / 100;
+ coin.dy *= 1 + Math.round(Math.random() * 100) / 100;
+ alert("Spezialrunde: coinspeed:" + Math.abs(coin.dx / 2));
+ }
+ }
+ } else {
+	player.speed = 2; 
+	coin.dx = 2;
+	coin.dy = 2;
+ }
+ }
+ }
+ }
+ 
+ 
+ function Draw() {
+ ctx.fillStyle = "#FF0000";
+ ctx.fillRect(player.x, player.y, player.size, player.size);
+ if (coin.active == 1) {
+ ctx.fillStyle = "#FFFF00"
+ ctx.fillRect(coin.x, coin.y, coin.size, coin.size);
+ }
+ }
+ 
+ function clear() {
+ ctx.clearRect(0, 0, Spielfeld.width, Spielfeld.height);
+ }
+ 
+ function gameLoop() {
+ update();
+ Collision()
+ clear();
+ Draw();
+ update();
+ 
+ requestAnimationFrame(gameLoop);
+ }
+ 
+ document.addEventListener("keydown", (e) => {
+ keys[e.key] = true;
+ });
+ 
+ document.addEventListener("keyup", (e) => {
+ keys[e.key] = false;
+ });
+ 
+ gameLoop();
+ </script>
+ </body>
+ </html>
