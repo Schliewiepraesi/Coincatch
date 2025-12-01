@@ -138,7 +138,7 @@
     while (Math.random() < 0.4) {
        if (Math.random() < 0.5) {
     player.speed *= (Math.round(Math.random() * 100) / 100);
-    alert("Spezialrunde: playerspeed:" + Math.abs(player.speed / 2));
+    document.getElementById("Playerspeed").innerHTML = Math.round( 50 * player.speed) / 100;
     } else {
     coin.dx *= 1 + Math.round(Math.random() * 100) / 100;
     coin.dy *= 1 + Math.round(Math.random() * 100) / 100;
@@ -149,6 +149,8 @@
        player.speed = 2;
        coin.dx = 2;
        coin.dy = 2;
+       document.getElementById("Playerspeed").innerHTML = 1;
+       document.getElementById("Coinspeed").innerHTML = 1;
     }
     }
     }
