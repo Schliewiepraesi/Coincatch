@@ -24,7 +24,7 @@
         background-color: #222;
         display: block;
         margin: 50px auto;
-        border: 2px solid white;
+        border: 16px solid white;
         width:100%;
         height: 80dvh;
 
@@ -44,9 +44,7 @@
     cash: 0,
     }
     if (localStorage.getItem("Save")) Speicher == JSON.parse(localStorage.getItem("Save"));
-
     document.getElementById("Cash").innerHTML = Speicher.cash;
-
     const player = {
     x: Spielfeld.width / 2,
     y: Spielfeld.height / 2,
@@ -68,6 +66,7 @@
     active: 0,
     value: 1,
     count: 99,
+    shield: false,
     };
 
     const keys = {
@@ -136,6 +135,7 @@
     if (Math.random() < 0.5) coin.dy = 0 - coin.dy;
     if (Math.random() < 0.4) {
     while (Math.random() < 0.4) {
+    document.getElementById("Canvas").style.border = "16px solid #4080FF";
        if (Math.random() < 0.5) {
     player.speed *= (Math.round(Math.random() * 100) / 100);
     document.getElementById("Playerspeed").innerHTML = Math.round( 50 * player.speed) / 100;
