@@ -69,6 +69,8 @@
     shield: false,
     };
 
+    let Pause = false;
+
     const keys = {
     ArrowUp: false,
     ArrowDown: false,
@@ -151,6 +153,7 @@
        coin.dy = 2;
        document.getElementById("Playerspeed").innerHTML = 1;
        document.getElementById("Coinspeed").innerHTML = 1;
+       document.getElementById("Canvas").style.border = "16px solid #FFFFFF";
     }
     }
     }
@@ -186,6 +189,14 @@
 
     document.addEventListener("keyup", (e) => {
     keys[e.key] = false;
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.which == 27) {
+        alert("Diese pause mit while loop und wait() erweitern")
+        }
+
+
     });
 
     gameLoop();
