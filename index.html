@@ -193,7 +193,11 @@
 
     document.addEventListener("keydown", (e) => {
         if (e.which == 27) {
-        alert("Diese pause mit while loop und wait() erweitern")
+        while (Pause) {
+            document.addEventListener("keydown", (e) => {
+            Pause = false;
+            sleep(25);
+        }
         }
 
 
