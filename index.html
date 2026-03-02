@@ -185,24 +185,13 @@
 
     document.addEventListener("keydown", (e) => {
     keys[e.key] = true;
+    if (e.key == "Escape") Pause = !(Pause);
+    console.log(Pause);
     });
 
     document.addEventListener("keyup", (e) => {
     keys[e.key] = false;
     });
-
-    document.addEventListener("keydown", (e) => {
-        if (e.which == 27) {
-        while (Pause) {
-            document.addEventListener("keydown", (e) => {
-            Pause = false;
-            sleep(25);
-        }
-        }
-
-
-    });
-
     gameLoop();
 </script>
 </body>
