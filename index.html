@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Spiel</title>
     <style>
         body {
@@ -14,6 +14,13 @@
         border: 0.5dvh solid #000;
         border-radius: 1dvh;
         height: 5dvh;
+        align-items: center;
+        }
+        .div {
+        flex: 1;
+        height: 5dvh;
+        align-items: center;
+        font-size: 40px;
         }
         .row {
         flex: 100%;
@@ -29,11 +36,17 @@
         height: 80dvh;
 
         }
+
     </style>
 </head>
 <body>
-<div>Aktuelle Zeit in Hektoframes: <span id="Z1"></span> HF</div><div>Bestzeit in Hektoframes: <span id="Z2">0</span></div><div>Runde: <span id="Round">1</span></div><div>Geld: <span id="Cash">0</span></div>
-<div class="row">Playerspeed:<span id="Playerspeed">1</span> &nbsp; &nbsp; &nbsp; &nbsp; Coinspeed:<span id="Coinspeed">1</span></div>
+<div>Aktuelle Zeit in Hektoframes: <span id="Z1"></span> HF</div>
+<div>Bestzeit in Hektoframes: <span id="Z2">0</span></div>
+<div>Runde: <span id="Round">1</span></div>
+<div><img src="https://raw.githubusercontent.com/Schliewiepraesi/Coincatch/refs/heads/main/Haufen_2.png"
+          class="div"><span id="Cash" class="div">0</span></div>
+<div class="row">Playerspeed:<span id="Playerspeed">1</span> &nbsp; &nbsp; &nbsp; &nbsp; Coinspeed:<span id="Coinspeed">1</span>
+</div>
 <canvas id="Canvas" height="400px"></canvas>
 
 <script>
@@ -43,7 +56,7 @@
     Highscore: 0,
     cash: 0,
     }
-    if (localStorage.getItem("Save")) Speicher == JSON.parse(localStorage.getItem("Save"));
+    if (localStorage.getItem("Save")) Speicher = JSON.parse(localStorage.getItem("Save"));
     document.getElementById("Cash").innerHTML = Speicher.cash;
     const player = {
     x: Spielfeld.width / 2,
@@ -147,14 +160,14 @@
     document.getElementById("Coinspeed").innerHTML = Math.round( 100 * Math.abs(coin.dx / 2)) / 100;
     }
     }
-    } else {
-       player.speed = 2;
-       coin.dx = 2;
-       coin.dy = 2;
-       document.getElementById("Playerspeed").innerHTML = 1;
-       document.getElementById("Coinspeed").innerHTML = 1;
-       document.getElementById("Canvas").style.border = "16px solid #FFFFFF";
-    }
+        } else {
+           player.speed = 2;
+           coin.dx = 2;
+           coin.dy = 2;
+           document.getElementById("Playerspeed").innerHTML = 1;
+           document.getElementById("Coinspeed").innerHTML = 1;
+           document.getElementById("Canvas").style.border = "16px solid #FFFFFF";
+        }
     }
     }
     }
@@ -165,6 +178,7 @@
     ctx.fillRect(player.x, player.y, player.size, player.size);
     if (coin.active == 1) {
     ctx.fillStyle = "#FFFF00"
+    if (coin.shield) ctx.fillStyle = "#5555FF"
     ctx.fillRect(coin.x, coin.y, coin.size, coin.size);
     }
     }
@@ -174,19 +188,19 @@
     }
 
     function gameLoop() {
+    if (Pause == false) {
     update();
     Collision()
     clear();
     Draw();
     update();
-
+    } else {Draw();}
     requestAnimationFrame(gameLoop);
     }
 
     document.addEventListener("keydown", (e) => {
     keys[e.key] = true;
     if (e.key == "Escape") Pause = !(Pause);
-    console.log(Pause);
     });
 
     document.addEventListener("keyup", (e) => {
