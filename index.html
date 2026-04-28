@@ -2,25 +2,27 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8"/>
-    <title>Spiel</title>
+    <title>Coincatch</title>
     <style>
         body {
         display: flex;
         flex-flow: row wrap;
          overflow: hidden;
+            background: #555555;
         }
         div {
-        flex: 1;
-        border: 0.5dvh solid #000;
-        border-radius: 1dvh;
-        height: 5dvh;
-        align-items: center;
+            flex: 1;
+            border: 0.5dvh solid #AAAAAA;
+            border-radius: 1dvh;
+            height: 5dvh;
+            align-items: center;
+            color: #AAAAAA;
         }
         .div {
         flex: 1;
         height: 5dvh;
         align-items: center;
-        font-size: 40px;
+        font-size: 5dvh;
         }
         .row {
         flex: 100%;
@@ -31,12 +33,11 @@
         background-color: #222;
         display: block;
         margin: 50px auto;
-        border: 16px solid white;
+        border: 16px solid #AAAAAA;
         width:100%;
         height: 80dvh;
 
         }
-
     </style>
 </head>
 <body>
@@ -47,8 +48,10 @@
           class="div"><span id="Cash" class="div">0</span></div>
 <div class="row">Playerspeed:<span id="Playerspeed">1</span> &nbsp; &nbsp; &nbsp; &nbsp; Coinspeed:<span id="Coinspeed">1</span>
 </div>
-<canvas id="Canvas" height="400px"></canvas>
-
+<canvas id="Canvas" height="800px"></canvas>
+<div class="hidden">
+    <img id="Geld" src="Geld.png" />
+</div>
 <script src="Script.js">
 </body>
 </html>
