@@ -10,15 +10,11 @@ let Speicher = {
 if (localStorage.getItem("Save")) Speicher = JSON.parse(localStorage.getItem("Save"));
 document.getElementById("Cash").innerHTML = Speicher.cash;
 
-let Spielrunde = 1;
-let Spezialrunde = false;
 
 
 const player = {
     x: Spielfeld.width / 2,
     y: Spielfeld.height / 2,
-    Durchmesser: 60,
-    speed: 4,
     dx: 0,
     dy: 0,
     Abklingzeit1: 0,
@@ -28,9 +24,6 @@ const player = {
 const coin = {
     x: Spielfeld.width / 4,
     y: Spielfeld.height / 4,
-    Durchmesser: 60,
-    dx: 3,
-    dy: 3,
     Aktiv: false,
     Wert: 1,
     Lifetime: 99,
@@ -61,7 +54,6 @@ const keys = {
 
 
 
-
 function update() {
     player.dx = 0;
     player.dy = 0;
@@ -79,15 +71,12 @@ function update() {
     player.y = Math.max(0, Math.min(Spielfeld.height - player.Durchmesser, player.y));
 
     if (coin.Aktiv == true) {
-        // Kollisionen checken
         if (coin.x == 0 || coin.x == Spielfeld.width - coin.Durchmesser) coin.dx = 0 - coin.dx;
         if (coin.y == 0 || coin.y == Spielfeld.height - coin.Durchmesser) coin.dy = 0 - coin.dy;
 
-        // Bewegen
         coin.x += (coin.dx);
         coin.y += (coin.dy);
 
-        // Out of bounds verhindern
         coin.x = Math.max(0, Math.min(Spielfeld.width - coin.Durchmesser, coin.x));
         coin.y = Math.max(0, Math.min(Spielfeld.height - coin.Durchmesser, coin.y));
     }
@@ -118,9 +107,7 @@ function Collision() {
             }
             Speicher.cash += coin.Wert;
 
-           Spielrunde += 1;
 
-            document.getElementById("Round").innerHTML = Spielrunde;
             document.getElementById("Cash").innerHTML = Speicher.cash;
 
             coin.Lifetime = 0;
@@ -141,23 +128,7 @@ function Collision() {
             if (Math.random() < 0.5) coin.dy = 0 - coin.dy;
 
             if (Math.random() < 0.4) {
-
-                Spezialrunde = true;
-
-                document.getElementById("Canvas").style.border = "16px solid #4080FF";
-
-                if (Math.random() < 0.5) {
-                    player.speed *= (Math.round(Math.random() * 100) / 100);
-
-                    document.getElementById("Playerspeed").innerHTML = Math.round( 50 * player.speed) / 100;
-                } else                   {
-                    coin.dx *= 1 + Math.round(Math.random() * 100) / 100;
-                    coin.dy *= 1 + Math.round(Math.random() * 100) / 100;
-                    document.getElementById("Coinspeed").innerHTML = Math.round( 100 * Math.abs(coin.dx / 2)) / 100;
-                }
-
                 while (Math.random() < 0.4) {
-
                     document.getElementById("Canvas").style.border = "16px solid #4080FF";
 
                     if (Math.random() < 0.5) {
@@ -171,15 +142,10 @@ function Collision() {
                     }
                 }
             } else                  {
-                Spezialrunde = false;
-                player.speed = 3;
-                coin.dx = 3;
-                coin.dy = 3;
 
                 document.getElementById("Playerspeed").innerHTML = 1;
                 document.getElementById("Coinspeed").innerHTML = 1;
 
-                document.getElementById("Canvas").style.border = "16px solid #AAAAAA";
             }
 
         }
@@ -193,28 +159,17 @@ function Collision() {
 
 
 function Draw() {
-    document.getElementById("Canvas").width = 800 * (window.innerWidth / window.innerHeight);
     ctx.fillStyle = "#FF0000";
 
     ctx.fillRect(player.x, player.y, player.Durchmesser, player.Durchmesser);
 
     if (coin.Aktiv == true) {
 
-
         if (coin.shield) {
             ctx.fillStyle = "#5555FF";
             ctx.fillRect(coin.x, coin.y, coin.Durchmesser, coin.Durchmesser);
-        } else {
-            if (Spezialrunde != true) {
-                ctx.drawImage(document.getElementById("Geld"), coin.x, coin.y, coin.Durchmesser, coin.Durchmesser);
-            } else                    {
-                ctx.drawImage(document.getElementById("Skillpoint"), coin.x, coin.y, coin.Durchmesser, coin.Durchmesser);
             }
-
         }
-
-    }
-
 }
 
 
