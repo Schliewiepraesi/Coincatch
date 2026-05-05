@@ -70,9 +70,9 @@ function update() {
     player.x = Math.max(0, Math.min(Spielfeld.width - player.Durchmesser, player.x));
     player.y = Math.max(0, Math.min(Spielfeld.height - player.Durchmesser, player.y));
 
-    if (coin.Aktiv == true) {
-        if (coin.x == 0 || coin.x == Spielfeld.width - coin.Durchmesser) coin.dx = 0 - coin.dx;
-        if (coin.y == 0 || coin.y == Spielfeld.height - coin.Durchmesser) coin.dy = 0 - coin.dy;
+    if (coin.Aktiv) {
+        if (coin.x || (coin.x == (Spielfeld.width - coin.Durchmesser))) coin.dx = 0 - coin.dx;
+        if (coin.y || (coin.y == (Spielfeld.height - coin.Durchmesser))) coin.dy = 0 - coin.dy;
 
         coin.x += (coin.dx);
         coin.y += (coin.dy);
