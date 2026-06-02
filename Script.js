@@ -6,9 +6,14 @@ const ctx = Spielfeld.getContext("2d");
 let Speicher = {
     Highscore: 0,
     cash: 0,
+    skillpoints: 0,
+    items: [],
+    Powers: [],
 }
+
 if (localStorage.getItem("Save")) Speicher = JSON.parse(localStorage.getItem("Save"));
 document.getElementById("Cash").innerHTML = Speicher.cash;
+document.getElementById("Skillpoints").innerHTML = Speicher.skillpoints;
 
 let Spielrunde = 1;
 let Spezialrunde = false;
@@ -114,12 +119,17 @@ function Collision() {
                 document.getElementById("Z2").innerHTML = coin.Lifetime / 100; Speicher.Highscore = coin.Lifetime;
 
             }
-            Speicher.cash += coin.Wert;
+            if (Spezialrunde) {
+                Speicher.skillpoints += coin.Wert;
+            } else {
+                Speicher.cash += coin.Wert;
+            }
 
             Spielrunde += 1;
 
             document.getElementById("Round").innerHTML = Spielrunde;
             document.getElementById("Cash").innerHTML = Speicher.cash;
+            document.getElementById("Skillpoints").innerHTML = Speicher.skillpoints;
 
             coin.Lifetime = 0;
 
@@ -138,8 +148,10 @@ function Collision() {
             if (Math.random() < 0.5) coin.dx = 0 - coin.dx;
             if (Math.random() < 0.5) coin.dy = 0 - coin.dy;
 
-            if (Math.random() < 0.4) {
+            if (Math.random() < 0.1) {
 
+
+                coin.Wert += 1;
 
                 Spezialrunde = true;
 
@@ -156,7 +168,8 @@ function Collision() {
                 }
 
 
-                while (Math.random() < 0.4) {
+                while (Math.random() < 0.1) {
+                    coin.Wert += 1;
 
                     Spezialrunde = true;
 
@@ -173,6 +186,7 @@ function Collision() {
                     }
                 }
             } else                  {
+                coin.Wert = 1;
                 Spezialrunde = false;
                 player.speed = 3;
                 coin.dx = 3;
